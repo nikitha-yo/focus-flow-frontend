@@ -2,22 +2,17 @@ import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, CartesianGrid } from 'recharts';
-import ComposeEmail from '../components/ComposeEmail';
 import MeetingScheduler from '../components/MeetingScheduler';
 
 const BAR_COLORS = ['#c0392b', '#2563eb', '#16a34a', '#d97706'];
-
-const EMPTY_COMPOSE = { toIds: [], ccIds: [], subject: '', body: '', attachments: [] };
 
 export default function Dashboard() {
   const { user, isOrg } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [members, setMembers] = useState([]);
-  const [composeOpen, setComposeOpen] = useState(false);
   const [meetingOpen, setMeetingOpen] = useState(false);
   const [meetSeedParticipants, setMeetSeedParticipants] = useState([]);
-  const [composePrefill, setComposePrefill] = useState(EMPTY_COMPOSE);
 
   useEffect(() => {
     api.get('dashboard/').then(r => { setStats(r.data); setLoading(false); }).catch(() => setLoading(false));
@@ -56,16 +51,6 @@ export default function Dashboard() {
               }}
             >
               📅 Schedule Meeting
-            </button>
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => {
-                setComposePrefill({ ...EMPTY_COMPOSE });
-                setComposeOpen(true);
-              }}
-            >
-              ✉ Compose Email
             </button>
           </div>
         )}
@@ -146,31 +131,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <ComposeEmail
-        isOpen={composeOpen}
-        onClose={() => setComposeOpen(false)}
-        members={members}
-        initialToIds={composePrefill.toIds}
-        initialCcIds={composePrefill.ccIds}
-        initialSubject={composePrefill.subject}
-        initialBody={composePrefill.body}
-        initialAttachments={composePrefill.attachments}
-      />
       <MeetingScheduler
         isOpen={meetingOpen}
         onClose={() => setMeetingOpen(false)}
         members={members}
         initialParticipantIds={meetSeedParticipants}
-        onComposeInvite={(p) => {
-          setComposePrefill({
-            toIds: p.toIds || [],
-            ccIds: p.ccIds || [],
-            subject: p.subject || '',
-            body: p.body || '',
-            attachments: p.attachments || [],
-          });
-          setComposeOpen(true);
-        }}
       />
     </div>
   );

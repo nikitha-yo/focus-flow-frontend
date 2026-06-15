@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
-import ComposeEmail from '../components/ComposeEmail';
 
 const MOCK_DRIVE_NAMES = ['Q4 OKRs.docx', 'Team Budget FY26.xlsx', 'Product roadmap.pdf', 'All-hands recap.docx'];
 
@@ -23,9 +22,6 @@ export default function DocumentHub() {
   const [driveOpen, setDriveOpen] = useState(false);
   const [drivePhase, setDrivePhase] = useState('idle');
   const [mockImports, setMockImports] = useState([]); // fake Drive rows (frontend-only)
-
-  const [composeOpen, setComposeOpen] = useState(false);
-  const [composeAttach, setComposeAttach] = useState([]);
 
   const loadDocs = () => {
     api
@@ -103,12 +99,6 @@ export default function DocumentHub() {
     }
   };
 
-  const openComposeWithDoc = (doc) => {
-    if (!doc.mockKey && doc.id)
-      setComposeAttach([{ id: doc.id, title: doc.title, file_url: doc.file_url, file_type: doc.file_type }]);
-    else setComposeAttach([{ id: null, title: doc.title, file_type: doc.file_type, mockKey: doc.mockKey }]);
-    setComposeOpen(true);
-  };
 
   const tabs = [
     { id: 'all', label: 'All' },
@@ -225,9 +215,6 @@ export default function DocumentHub() {
                       Download
                     </span>
                   )}
-                  <button type="button" className="btn-primary btn-sm" onClick={() => openComposeWithDoc(d)}>
-                    Attach to Email
-                  </button>
                 </div>
               </div>
             );
@@ -269,17 +256,6 @@ export default function DocumentHub() {
         </div>
       )}
 
-      <ComposeEmail
-        isOpen={composeOpen}
-        onClose={() => {
-          setComposeOpen(false);
-          setComposeAttach([]);
-        }}
-        members={members}
-        initialToIds={[]}
-        initialCcIds={[]}
-        initialAttachments={composeAttach}
-      />
     </div>
   );
 }

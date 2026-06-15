@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
-import ComposeEmail from '../components/ComposeEmail';
 import MeetingScheduler from '../components/MeetingScheduler';
 
 const EMPTY_COMPOSE = { toIds: [], ccIds: [], subject: '', body: '', attachments: [] };
@@ -16,15 +15,8 @@ export default function Members() {
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'member' });
   const canAddMembers = ['admin', 'manager'].includes(user?.role);
 
-  const [composeOpen, setComposeOpen] = useState(false);
   const [meetingOpen, setMeetingOpen] = useState(false);
   const [meetSeedParticipants, setMeetSeedParticipants] = useState([]);
-  const [composePrefill, setComposePrefill] = useState(EMPTY_COMPOSE);
-
-  const openCompose = (patch = {}) => {
-    setComposePrefill({ ...EMPTY_COMPOSE, ...patch });
-    setComposeOpen(true);
-  };
 
   const openMeeting = (participantIds = []) => {
     setMeetSeedParticipants(participantIds);
@@ -69,9 +61,6 @@ export default function Members() {
           <div className="page-subtitle">{user?.org?.name} · {members.length} members</div>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'flex-end' }}>
-          <button type="button" className="btn-primary btn-sm" onClick={() => openCompose({})}>
-            ✉ Compose Email
-          </button>
           <button type="button" className="btn-secondary btn-sm" onClick={() => openMeeting([])}>
             📅 Schedule Meeting
           </button>
@@ -112,9 +101,6 @@ export default function Members() {
               <span style={{fontSize:12,color:'var(--muted)'}}>Joined {new Date(m.created_at).toLocaleDateString()}</span>
             </div>
             <div className="member-actions">
-              <button type="button" className="btn-secondary btn-sm" onClick={() => openCompose({ toIds: [m.id] })}>
-                Message
-              </button>
               <button type="button" className="btn-maroon-icon" aria-label="Schedule meeting with member" title="Schedule meeting" onClick={() => openMeeting([m.id])}>
                 📅
               </button>
@@ -123,32 +109,11 @@ export default function Members() {
         ))}
       </div>
 
-      <ComposeEmail
-        isOpen={composeOpen}
-        onClose={() => setComposeOpen(false)}
-        members={members}
-        initialToIds={composePrefill.toIds}
-        initialCcIds={composePrefill.ccIds}
-        initialSubject={composePrefill.subject}
-        initialBody={composePrefill.body}
-        initialAttachments={composePrefill.attachments}
-      />
-
       <MeetingScheduler
         isOpen={meetingOpen}
         onClose={() => setMeetingOpen(false)}
         members={members}
         initialParticipantIds={meetSeedParticipants}
-        onComposeInvite={(p) => {
-          setComposePrefill({
-            toIds: p.toIds || [],
-            ccIds: p.ccIds || [],
-            subject: p.subject || '',
-            body: p.body || '',
-            attachments: p.attachments || [],
-          });
-          setComposeOpen(true);
-        }}
       />
 
       {showAddModal && (

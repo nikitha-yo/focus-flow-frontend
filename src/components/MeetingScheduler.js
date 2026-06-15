@@ -24,7 +24,7 @@ function makeLink(platform) {
   return `https://teams.microsoft.com/l/meetup-join/19%3ameeting_${rand()}%40thread.v2/0?context={"Tid"%3a"mock"}`;
 }
 
-export default function MeetingScheduler({ isOpen, onClose, members, initialParticipantIds = [], onComposeInvite }) {
+export default function MeetingScheduler({ isOpen, onClose, members, initialParticipantIds = [] }) {
   const [platform, setPlatform] = useState('meet');
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -88,15 +88,6 @@ export default function MeetingScheduler({ isOpen, onClose, members, initialPart
     }
     const plainBody = `You're invited to ${title || 'a meeting'} on ${date} at ${time} for ${durationLabel}. Join here: ${linkForInvite}\n\nAgenda: ${agenda || '(none)'}`;
     const htmlBody = plainBody.replace(/\n/g, '<br/>');
-    if (typeof onComposeInvite === 'function') {
-      onComposeInvite({
-        toIds: participants,
-        ccIds: [],
-        subject: `Meeting Invite: ${title || 'Meeting'}`,
-        body: `<p>${htmlBody}</p>`,
-        attachments: [],
-      });
-    }
     onClose();
   };
 
