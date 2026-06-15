@@ -10,6 +10,7 @@ import Mood from './pages/Mood';
 import Analytics from './pages/Analytics';
 import Streaks from './pages/Streaks';
 import Members from './pages/Members';
+import DocumentHub from './pages/DocumentHub';
 import './index.css';
 
 function Layout({ children }) {
@@ -17,6 +18,20 @@ function Layout({ children }) {
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">{children}</main>
+      <div className="ai-chat-widget" aria-hidden="true">
+        <div className="ai-chat-widget-inner">
+          <div className="ai-chat-panel">
+            <div className="ai-chat-header">FocusFlow Assistant</div>
+            <div className="ai-chat-body">
+              <div className="ai-bubble ai-bubble-ai">
+                Hi! I can summarize your streaks or suggest focus blocks whenever you&apos;re ready.
+              </div>
+              <div className="ai-bubble ai-bubble-user">Show me quick wins for today.</div>
+            </div>
+          </div>
+          <div className="ai-chat-fab">💬</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -48,6 +63,7 @@ function App() {
           <Route path="/analytics" element={<Protected><Analytics /></Protected>} />
           <Route path="/streaks" element={<Protected><Streaks /></Protected>} />
           <Route path="/members" element={<Protected><Members /></Protected>} />
+          <Route path="/documents" element={<Protected><DocumentHub /></Protected>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>

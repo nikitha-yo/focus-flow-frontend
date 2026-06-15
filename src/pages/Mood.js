@@ -54,21 +54,21 @@ export default function Mood() {
           <div style={{marginBottom:20}}>
             <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
               <span style={{fontSize:13,fontWeight:500}}>Energy Level</span>
-              <span style={{fontSize:13,fontWeight:600,color:'var(--teal)'}}>{energy}/5</span>
+              <span style={{fontSize:13,fontWeight:600,color:'var(--color-maroon)'}}>{energy}/5</span>
             </div>
-            <input type="range" min="1" max="5" value={energy} onChange={e=>setEnergy(+e.target.value)} style={{width:'100%',accentColor:'var(--teal)'}}/>
+            <input type="range" min="1" max="5" value={energy} onChange={e=>setEnergy(+e.target.value)} style={{width:'100%',accentColor:'var(--color-maroon)'}}/>
             <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--muted)',marginTop:4}}>
               <span>Exhausted</span><span>Peak</span>
             </div>
           </div>
 
-          <button className="btn btn-teal" style={{width:'100%'}} onClick={save} disabled={!selected||saving}>
+          <button type="button" className="btn-primary" style={{width:'100%'}} onClick={save} disabled={!selected||saving}>
             {saving ? 'Saving...' : 'Log Mood & Get Recommendation'}
           </button>
 
           {rec && (
-            <div style={{marginTop:16,padding:16,background:'var(--teal2)',borderRadius:12,border:'1px solid rgba(15,123,94,0.2)'}}>
-              <div style={{fontWeight:600,marginBottom:6,color:'var(--teal)'}}>💡 Recommendation</div>
+            <div className="mood-rec-box">
+              <div style={{fontWeight:600,marginBottom:6,color:'var(--color-maroon)'}}>💡 Recommendation</div>
               <div style={{fontSize:14}}>{rec}</div>
             </div>
           )}
@@ -83,16 +83,17 @@ export default function Mood() {
             </div>
           ) : logs.slice(0,12).map(l => {
             const m = MOODS.find(x=>x.key===l.mood) || {emoji:'😐'};
+            const chip = l.energy_level >= 4 ? 'green' : l.energy_level >= 3 ? 'amber' : 'red';
             return (
-              <div key={l.id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
+              <div key={l.id} className="mood-log-row">
                 <span style={{fontSize:24}}>{m.emoji}</span>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:500,textTransform:'capitalize'}}>{l.mood}</div>
                   <div style={{fontSize:12,color:'var(--muted)'}}>{l.recommendation?.slice(0,60)}...</div>
+                  <span className={`chip ${chip}`}>Energy {l.energy_level}/5</span>
                 </div>
                 <div style={{textAlign:'right'}}>
                   <div style={{fontSize:11,color:'var(--muted)'}}>{new Date(l.logged_at).toLocaleDateString()}</div>
-                  <div style={{fontSize:12,fontWeight:600}}>⚡{l.energy_level}/5</div>
                 </div>
               </div>
             );

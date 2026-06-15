@@ -28,26 +28,40 @@ export default function Sidebar() {
   const nav = isOrg ? orgNav : individualNav;
 
   return (
-    <div className={`sidebar ${isOrg?'org-sidebar':''}`}>
-      <div className="sidebar-logo">
-        FocusFlow
-        <span>{isOrg ? (user?.org?.name || 'Organisation') : 'Individual'}</span>
+    <div className="sidebar">
+      <div className="sidebar-brand">
+        <div className="sidebar-logo-mark" aria-hidden="true">🔥</div>
+        <div className="sidebar-logo-text-wrap">
+          <div className="sidebar-logo-text">FocusFlow</div>
+          <div className="sidebar-logo-sub">{isOrg ? (user?.org?.name || 'Organisation') : 'Individual'}</div>
+        </div>
       </div>
       <nav className="nav-section">
-        <div className="nav-label">Navigation</div>
+        <div className="nav-section-label">Navigation</div>
         {nav.filter(n => !n.roles || n.roles.includes(user?.role)).map(n => (
           <div key={n.path} className={`nav-item ${location.pathname===n.path?'active':''}`} onClick={() => navigate(n.path)}>
-            <span className="nav-icon">{n.icon}</span>{n.label}
+            <span className="nav-icon">{n.icon}</span>
+            {n.label}
           </div>
         ))}
+        {isOrg && (
+          <>
+            <div className="nav-divider" />
+            <div className="nav-section-label" style={{ marginTop: 4 }}>Work module</div>
+            <div className={`nav-item ${location.pathname === '/documents' ? 'active' : ''}`} onClick={() => navigate('/documents')}>
+              <span className="nav-icon">📁</span>
+              Documents
+            </div>
+          </>
+        )}
       </nav>
       <div className="sidebar-user">
-        <div className="user-avatar">{user?.username?.[0]?.toUpperCase()}</div>
+        <div className="user-avatar sidebar-avatar">{user?.username?.[0]?.toUpperCase()}</div>
         <div className="user-info">
           <div className="user-name">{user?.username}</div>
           <div className="user-role">{user?.role}</div>
         </div>
-        <button className="logout-btn" onClick={logout} title="Logout">⏻</button>
+        <button type="button" className="logout-btn" onClick={logout} title="Logout" aria-label="Logout">⏻</button>
       </div>
     </div>
   );

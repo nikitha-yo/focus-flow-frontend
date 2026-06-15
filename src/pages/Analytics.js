@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line, CartesianGrid } from 'recharts';
 
-const COLORS = ['#0f7b5e','#2563eb','#7c3aed','#f97316','#dc2626'];
+const COLORS = ['#c0392b', '#2563eb', '#16a34a', '#d97706', '#dc2626'];
 
 export default function Analytics() {
   const [stats, setStats] = useState(null);
@@ -48,7 +48,7 @@ export default function Analytics() {
       </div>
 
       <div className="card-grid card-grid-2" style={{marginBottom:16}}>
-        <div className="chart-wrapper">
+        <div className="chart-wrapper chart-bare">
           <div className="chart-title">Tasks by Category</div>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -59,14 +59,16 @@ export default function Analytics() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="chart-wrapper">
+        <div className="chart-wrapper chart-bare">
           <div className="chart-title">Tasks by Status</div>
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={statusData}>
-              <XAxis dataKey="name" tick={{fontSize:12}}/><YAxis tick={{fontSize:12}}/>
-              <Tooltip/>
-              <Bar dataKey="value" radius={[6,6,0,0]}>
-                {statusData.map((e,i) => <Cell key={i} fill={COLORS[i]}/>)}
+            <BarChart data={statusData} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
+              <CartesianGrid stroke="#f4f4f6" vertical={false} />
+              <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#999' }} stroke="#ccc" />
+              <YAxis tick={{ fontSize: 12, fill: '#999' }} stroke="#ccc" />
+              <Tooltip />
+              <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                {statusData.map((e,i) => <Cell key={i} fill={COLORS[i % 4]} />)}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -74,19 +76,21 @@ export default function Analytics() {
       </div>
 
       <div className="card-grid card-grid-2">
-        <div className="chart-wrapper">
+        <div className="chart-wrapper chart-bare">
           <div className="chart-title">Focus Sessions Timeline</div>
           {focusByDay.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={focusByDay}>
-                <XAxis dataKey="day" tick={{fontSize:12}}/><YAxis tick={{fontSize:12}}/>
-                <Tooltip/>
-                <Line type="monotone" dataKey="mins" stroke="var(--teal)" strokeWidth={2} dot/>
+              <LineChart data={focusByDay} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
+                <CartesianGrid stroke="#f4f4f6" />
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#999' }} stroke="#ccc" />
+                <YAxis tick={{ fontSize: 12, fill: '#999' }} stroke="#ccc" />
+                <Tooltip />
+                <Line type="monotone" dataKey="mins" stroke="#c0392b" strokeWidth={2} dot={{ fill: '#c0392b', r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           ) : <div className="empty-state" style={{padding:24}}><div>No sessions yet</div></div>}
         </div>
-        <div className="chart-wrapper">
+        <div className="chart-wrapper chart-bare">
           <div className="chart-title">Mood Distribution</div>
           {moodData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>

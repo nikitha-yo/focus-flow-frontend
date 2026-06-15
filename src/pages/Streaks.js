@@ -16,25 +16,37 @@ export default function Streaks() {
         </div>
       </div>
 
-      <div className="card-grid card-grid-4" style={{marginBottom:24}}>
-        <div className="stat-card" style={{textAlign:'center'}}>
-          <div style={{fontSize:48}}>🔥</div>
-          <div className="stat-value" style={{color:'#f97316',fontSize:36}}>{streak.current_streak}</div>
-          <div className="stat-label">Current Streak (days)</div>
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="chart-title">Consistency grid</div>
+        <div className="streak-heatmap">
+          {Array.from({ length: 28 }, (_, i) => {
+            const cycle = ['l2', '', 'l4', 'l1', '', 'l3', 'l2'];
+            const level = cycle[i % 7];
+            return <div key={i} className={level ? `streak-heatmap-cell ${level}` : 'streak-heatmap-cell'} />;
+          })}
         </div>
-        <div className="stat-card" style={{textAlign:'center'}}>
-          <div style={{fontSize:48}}>🏆</div>
-          <div className="stat-value" style={{color:'#f59e0b'}}>{streak.longest_streak}</div>
+      </div>
+
+      <div className="card-grid card-grid-4" style={{marginBottom:24}}>
+        <div className="stat-card amber" style={{textAlign:'center'}}>
+          <div className="icon-pill amber" style={{ margin: '0 auto 8px', fontSize: 28 }}>🔥</div>
+          <div className="stat-value" style={{fontSize:36}}>{streak.current_streak}</div>
+          <div className="stat-label">Current Streak (days)</div>
+          <span className="chip amber">On fire</span>
+        </div>
+        <div className="stat-card blue" style={{textAlign:'center'}}>
+          <div className="icon-pill blue" style={{ margin: '0 auto 8px', fontSize: 28 }}>🏆</div>
+          <div className="stat-value">{streak.longest_streak}</div>
           <div className="stat-label">Longest Streak</div>
         </div>
-        <div className="stat-card" style={{textAlign:'center'}}>
-          <div style={{fontSize:48}}>⏱️</div>
-          <div className="stat-value" style={{color:'var(--teal)'}}>{streak.total_sessions}</div>
+        <div className="stat-card green" style={{textAlign:'center'}}>
+          <div className="icon-pill green" style={{ margin: '0 auto 8px', fontSize: 28 }}>⏱️</div>
+          <div className="stat-value">{streak.total_sessions}</div>
           <div className="stat-label">Total Focus Sessions</div>
         </div>
-        <div className="stat-card" style={{textAlign:'center'}}>
-          <div style={{fontSize:48}}>✅</div>
-          <div className="stat-value" style={{color:'var(--blue)'}}>{streak.total_tasks_completed}</div>
+        <div className="stat-card red" style={{textAlign:'center'}}>
+          <div className="icon-pill red" style={{ margin: '0 auto 8px', fontSize: 28 }}>✅</div>
+          <div className="stat-value">{streak.total_tasks_completed}</div>
           <div className="stat-label">Tasks Completed</div>
         </div>
       </div>
@@ -53,11 +65,11 @@ export default function Streaks() {
             { icon:'🚀', title:'Rocket Mode', desc:'50 tasks completed', unlocked: streak.total_tasks_completed >= 50 },
             { icon:'💎', title:'Diamond', desc:'100 tasks completed', unlocked: streak.total_tasks_completed >= 100 },
           ].map((a,i) => (
-            <div key={i} style={{padding:16,borderRadius:14,border:`2px solid ${a.unlocked?'var(--teal)':'var(--border)'}`,background:a.unlocked?'var(--teal2)':'var(--s2)',opacity:a.unlocked?1:0.5,transition:'all 0.2s'}}>
+            <div key={i} className={`streak-milestone ${a.unlocked ? 'unlocked' : ''}`} style={{opacity:a.unlocked?1:0.45,transition:'all 0.2s'}}>
               <div style={{fontSize:32,marginBottom:8}}>{a.icon}</div>
-              <div style={{fontWeight:600,fontSize:14,color:a.unlocked?'var(--teal)':'var(--text)'}}>{a.title}</div>
+              <div style={{fontWeight:600,fontSize:14}}>{a.title}</div>
               <div style={{fontSize:12,color:'var(--muted)',marginTop:4}}>{a.desc}</div>
-              {a.unlocked && <div style={{fontSize:11,color:'var(--teal)',fontWeight:600,marginTop:6}}>✓ Unlocked!</div>}
+              {a.unlocked && <span className="chip green" style={{ marginTop: 8 }}>Unlocked</span>}
             </div>
           ))}
         </div>

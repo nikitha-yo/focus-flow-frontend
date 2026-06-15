@@ -65,12 +65,12 @@ export default function Tasks() {
           <div className="page-title">{isOrg ? 'Team Tasks' : 'My Tasks'}</div>
           <div className="page-subtitle">{tasks.length} tasks total · {tasks.filter(t=>t.status==='completed').length} completed</div>
         </div>
-        <button className="btn btn-teal" onClick={openAdd}>+ Add Task</button>
+        <button type="button" className="btn-primary" onClick={openAdd}>+ Add Task</button>
       </div>
 
       <div style={{display:'flex',gap:8,marginBottom:20,flexWrap:'wrap'}}>
         {['all','pending','in_progress','completed','high','medium','low'].map(f => (
-          <button key={f} className={`btn btn-sm ${filter===f?'btn-teal':'btn-ghost'}`} onClick={() => setFilter(f)} style={{textTransform:'capitalize'}}>
+          <button type="button" key={f} className={`btn btn-sm ${filter===f?'filter-active':'btn-ghost'}`} onClick={() => setFilter(f)} style={{textTransform:'capitalize'}}>
             {f==='all'?'All':f.replace('_',' ')}
           </button>
         ))}
@@ -83,7 +83,7 @@ export default function Tasks() {
           <div>Add your first task to get started!</div>
         </div>
       ) : filtered.map(t => (
-        <div key={t.id} className="task-item">
+        <div key={t.id} className={`task-item ${t.status==='completed'?'task-done':''}`}>
           <div className={`task-check ${t.status==='completed'?'done':''}`} onClick={() => toggle(t)}>
             {t.status==='completed' && '✓'}
           </div>
@@ -139,9 +139,9 @@ export default function Tasks() {
             <div className="form-group"><label className="form-label" style={{color:'var(--muted)'}}>Description</label>
               <textarea className="form-input" rows={3} style={{background:'var(--s2)',border:'1px solid var(--border)',color:'var(--text)',resize:'vertical'}} value={form.description} onChange={e=>set('description',e.target.value)} placeholder="Optional notes..."/>
             </div>
-            <div className="modal-actions">
-              <button className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="btn btn-teal" onClick={save}>{editTask?'Update':'Add Task'}</button>
+            <div className="modal-actions modal-actions-split">
+              <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              <button type="button" className="btn-primary" onClick={save}>{editTask?'Update':'Add Task'}</button>
             </div>
           </div>
         </div>

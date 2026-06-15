@@ -51,82 +51,120 @@ export default function Auth() {
   };
 
   const isOrg = userType === 'org';
+
   return (
-    <div className="auth-wrapper">
-      <div className={`auth-card ${isOrg?'org-mode':''}`}>
-        <div className="auth-logo">Focus<span>Flow</span></div>
-        <div className="auth-subtitle">Productivity Tracker & Task Optimizer</div>
-        <div className="auth-tabs">
-          <button className={`auth-tab ${tab==='signin'?'active':''}`} onClick={() => {setTab('signin');setError('');}}>Sign In</button>
-          <button className={`auth-tab ${tab==='signup'?'active':''}`} onClick={() => {setTab('signup');setError('');}}>Sign Up</button>
-        </div>
-        {tab==='signup' && (
-          <div className="auth-type-select">
-            <button className={`type-btn ${!isOrg?'active':''}`} onClick={() => handleTypeChange('individual')}>
-              <div className="icon">👤</div><div className="label">Individual</div><div className="desc">Personal productivity</div>
-            </button>
-            <button className={`type-btn org-btn ${isOrg?'active':''}`} onClick={() => handleTypeChange('org')}>
-              <div className="icon">🏢</div><div className="label">Organisation</div><div className="desc">Team workspace</div>
-            </button>
+    <div className="auth-split">
+      <aside className="auth-brand-panel">
+        <div className="auth-brand-inner">
+          <div className="auth-brand-logo-row">
+            <div className="auth-brand-logo-mark">🔥</div>
+            <div className="auth-brand-title">FocusFlow</div>
           </div>
-        )}
-        {error && <div className="error-msg">{error}</div>}
-        {tab==='signin' ? (
-          <>
-            <div className="form-group"><label className="form-label">Email</label>
-              <input className="form-input" type="email" placeholder="you@example.com" value={form.email} onChange={e=>set('email',e.target.value)}/>
-            </div>
-            <div className="form-group"><label className="form-label">Password</label>
-              <input className="form-input" type="password" placeholder="••••••••" value={form.password} onChange={e=>set('password',e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSubmit()}/>
-            </div>
-            <button className="btn-primary" onClick={handleSubmit} disabled={loading}>{loading?'Signing in...':'Sign In'}</button>
-          </>
-        ) : (
-          <>
-            <div className="form-row">
-              <div className="form-group"><label className="form-label">Username</label>
-                <input className={`form-input ${isOrg?'org-input':''}`} placeholder="username" value={form.username} onChange={e=>set('username',e.target.value)}/>
+          <p className="auth-brand-tagline">Stay focused. Stay balanced.</p>
+          <div className="auth-brand-pills">
+            <span className="auth-brand-pill">Mood Tracking</span>
+            <span className="auth-brand-pill">Focus Sessions</span>
+            <span className="auth-brand-pill">Team Insights</span>
+          </div>
+        </div>
+        <div className="auth-brand-accent-bar" />
+      </aside>
+      <div className="auth-form-panel">
+        <div className={`auth-signin-card ${error ? 'auth-has-error' : ''}`}>
+          <div className="auth-tabs-inline">
+            <button type="button" className={`auth-tab-inline ${tab==='signin'?'active':''}`} onClick={() => {setTab('signin');setError('');}}>Sign In</button>
+            <button type="button" className={`auth-tab-inline ${tab==='signup'?'active':''}`} onClick={() => {setTab('signup');setError('');}}>Sign Up</button>
+          </div>
+          {error && <div className="error-msg auth-error-msg">{error}</div>}
+
+          {tab === 'signin' ? (
+            <>
+              <h1 className="auth-card-title">Welcome back</h1>
+              <p className="auth-card-sub">Sign in to your workspace</p>
+              <div className="form-group">
+                <label className="form-label-muted">Email</label>
+                <input type="email" placeholder="you@example.com" value={form.email} onChange={e=>set('email',e.target.value)} />
               </div>
-              <div className="form-group"><label className="form-label">Email</label>
-                <input className={`form-input ${isOrg?'org-input':''}`} type="email" placeholder="you@email.com" value={form.email} onChange={e=>set('email',e.target.value)}/>
+              <div className="form-group">
+                <label className="form-label-muted">Password</label>
+                <input type="password" placeholder="••••••••" value={form.password} onChange={e=>set('password',e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSubmit()} />
               </div>
-            </div>
-            <div className="form-group"><label className="form-label">Password</label>
-              <input className={`form-input ${isOrg?'org-input':''}`} type="password" placeholder="Min 6 chars" value={form.password} onChange={e=>set('password',e.target.value)}/>
-            </div>
-            {isOrg && (<>
-              <div className="form-group"><label className="form-label">Your Role</label>
-                <select className="form-input org-input form-select" value={form.role} onChange={e=>set('role',e.target.value)}>
-                  <option value="admin">Admin</option><option value="manager">Manager</option><option value="member">Member</option>
-                </select>
+              <div className="auth-forgot-row">
+                <span className="auth-forgot-link">Forgot password?</span>
               </div>
-              <div className="form-group"><label className="form-label">Join Existing Organisation</label>
-                <select className="form-input org-input form-select" value={form.org_id} onChange={e=>set('org_id',e.target.value)}>
-                  <option value="">-- Create New Organisation --</option>
-                  {orgs.map(o=><option key={o.id} value={o.id}>{o.name} ({o.type})</option>)}
-                </select>
+              <button type="button" className="btn-primary auth-btn-block" onClick={handleSubmit} disabled={loading}>{loading?'Signing in...':'Sign In'}</button>
+              <div className="auth-divider">— or —</div>
+              <button type="button" className="btn-secondary auth-btn-block" onClick={() => {setTab('signup'); setError('');}}>Create an account</button>
+            </>
+          ) : (
+            <>
+              <h1 className="auth-card-title">Create an account</h1>
+              <p className="auth-card-sub">Start your productivity journey</p>
+              <div className="auth-type-select">
+                <button type="button" className={`type-btn ${!isOrg?'active':''}`} onClick={() => handleTypeChange('individual')}>
+                  <div className="icon">👤</div><div className="label">Individual</div><div className="desc">Personal productivity</div>
+                </button>
+                <button type="button" className={`type-btn org-btn ${isOrg?'active':''}`} onClick={() => handleTypeChange('org')}>
+                  <div className="icon">🏢</div><div className="label">Organisation</div><div className="desc">Team workspace</div>
+                </button>
               </div>
-              {!form.org_id && (<>
-                <div className="form-group"><label className="form-label">Organisation Name</label>
-                  <input className="form-input org-input" placeholder="Acme Corp / MG University" value={form.org_name} onChange={e=>set('org_name',e.target.value)}/>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label-muted">Username</label>
+                  <input placeholder="username" value={form.username} onChange={e=>set('username',e.target.value)} />
                 </div>
-                <div className="form-row">
-                  <div className="form-group"><label className="form-label">Type</label>
-                    <select className="form-input org-input form-select" value={form.org_type} onChange={e=>set('org_type',e.target.value)}>
-                      <option value="corporate">Corporate</option><option value="university">University</option><option value="other">Other</option>
-                    </select>
-                  </div>
-                  <div className="form-group"><label className="form-label">Admin Email</label>
-                    <input className="form-input org-input" type="email" placeholder="admin@org.com" value={form.org_admin_email} onChange={e=>set('org_admin_email',e.target.value)}/>
-                  </div>
+                <div className="form-group">
+                  <label className="form-label-muted">Email</label>
+                  <input type="email" placeholder="you@email.com" value={form.email} onChange={e=>set('email',e.target.value)} />
                 </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label-muted">Password</label>
+                <input type="password" placeholder="Min 6 chars" value={form.password} onChange={e=>set('password',e.target.value)} />
+              </div>
+              {isOrg && (<>
+                <div className="form-group">
+                  <label className="form-label-muted">Your Role</label>
+                  <select value={form.role} onChange={e=>set('role',e.target.value)}>
+                    <option value="admin">Admin</option><option value="manager">Manager</option><option value="member">Member</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="form-label-muted">Join Existing Organisation</label>
+                  <select value={form.org_id} onChange={e=>set('org_id',e.target.value)}>
+                    <option value="">-- Create New Organisation --</option>
+                    {orgs.map(o=><option key={o.id} value={o.id}>{o.name} ({o.type})</option>)}
+                  </select>
+                </div>
+                {!form.org_id && (<>
+                  <div className="form-group">
+                    <label className="form-label-muted">Organisation Name</label>
+                    <input placeholder="Acme Corp / MG University" value={form.org_name} onChange={e=>set('org_name',e.target.value)} />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label-muted">Type</label>
+                      <select value={form.org_type} onChange={e=>set('org_type',e.target.value)}>
+                        <option value="corporate">Corporate</option><option value="university">University</option><option value="other">Other</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label-muted">Admin Email</label>
+                      <input type="email" placeholder="admin@org.com" value={form.org_admin_email} onChange={e=>set('org_admin_email',e.target.value)} />
+                    </div>
+                  </div>
+                </>)}
               </>)}
-            </>)}
-            <button className={`btn-primary ${isOrg?'btn-org':''}`} onClick={handleSubmit} disabled={loading}>
-              {loading?'Creating account...':`Sign Up as ${isOrg?'Organisation Member':'Individual'}`}
-            </button>
-          </>
-        )}
+              <button type="button" className="btn-primary auth-btn-block" onClick={handleSubmit} disabled={loading}>
+                {loading?'Creating account...':`Sign Up as ${isOrg?'Organisation Member':'Individual'}`}
+              </button>
+              <div className="auth-divider">— or —</div>
+              <button type="button" className="btn-secondary auth-btn-block" onClick={() => {setTab('signin'); setError('');}}>
+                Already have an account
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

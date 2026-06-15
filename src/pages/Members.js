@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
+import ComposeEmail from '../components/ComposeEmail';
+import MeetingScheduler from '../components/MeetingScheduler';
+
+const EMPTY_COMPOSE = { toIds: [], ccIds: [], subject: '', body: '', attachments: [] };
 
 export default function Members() {
   const { user } = useAuth();
@@ -11,6 +15,21 @@ export default function Members() {
   const [error, setError] = useState('');
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'member' });
   const canAddMembers = ['admin', 'manager'].includes(user?.role);
+
+  const [composeOpen, setComposeOpen] = useState(false);
+  const [meetingOpen, setMeetingOpen] = useState(false);
+  const [meetSeedParticipants, setMeetSeedParticipants] = useState([]);
+  const [composePrefill, setComposePrefill] = useState(EMPTY_COMPOSE);
+
+  const openCompose = (patch = {}) => {
+    setComposePrefill({ ...EMPTY_COMPOSE, ...patch });
+    setComposeOpen(true);
+  };
+
+  const openMeeting = (participantIds = []) => {
+    setMeetSeedParticipants(participantIds);
+    setMeetingOpen(true);
+  };
 
   useEffect(() => {
     api.get('org/members/').then(r => { setMembers(r.data); setLoading(false); }).catch(() => setLoading(false));
@@ -49,31 +68,42 @@ export default function Members() {
           <div className="page-title">👥 Team Members</div>
           <div className="page-subtitle">{user?.org?.name} · {members.length} members</div>
         </div>
-        {canAddMembers && (
-          <button className="btn btn-blue" onClick={() => setShowAddModal(true)}>
-            + Add Team Member
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'flex-end' }}>
+          <button type="button" className="btn-primary btn-sm" onClick={() => openCompose({})}>
+            ✉ Compose Email
           </button>
-        )}
+          <button type="button" className="btn-secondary btn-sm" onClick={() => openMeeting([])}>
+            📅 Schedule Meeting
+          </button>
+          {canAddMembers && (
+            <button type="button" className="btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
+              + Add Team Member
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="org-banner">
         <div>
           <div className="org-badge">🏢 {user?.org?.name}</div>
-          <div style={{fontSize:20,fontWeight:700}}>{members.length} Team Members</div>
-          <div style={{opacity:0.8,fontSize:14,marginTop:4}}>{user?.org?.type} organisation</div>
+          <div style={{fontSize:20,fontWeight:700,color:'#fff'}}>{members.length} Team Members</div>
+          <div className="org-banner-label" style={{color:'rgba(255,255,255,0.65)', marginTop:4}}>{user?.org?.type} organisation</div>
         </div>
-        <div style={{fontSize:64}}>👥</div>
+        <div style={{ alignSelf: 'center', fontSize: 42, opacity: 0.85 }} aria-hidden="true">
+          👥
+        </div>
       </div>
 
       <div className="card-grid card-grid-3">
         {members.map(m => (
-          <div key={m.id} className="card" style={{display:'flex',flexDirection:'column',gap:12}}>
-            <div style={{display:'flex',alignItems:'center',gap:12}}>
-              <div style={{width:48,height:48,borderRadius:'50%',background:'var(--blue2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,fontWeight:700,color:'var(--blue)'}}>
-                {m.username[0].toUpperCase()}
-              </div>
-              <div>
-                <div style={{fontWeight:600,fontSize:15}}>{m.username}</div>
+          <div key={m.id} className="card member-card" style={{display:'flex',flexDirection:'column',gap:12}}>
+            <div className="member-row-head">
+              <div className="member-avatar">{m.username[0].toUpperCase()}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{fontWeight:600,fontSize:15}}>{m.username}</div>
+                  <span className={`member-stress-dot ${m.role==='admin'?'red':m.role==='manager'?'amber':'green'}`} title="Workload hint" aria-hidden />
+                </div>
                 <div style={{fontSize:12,color:'var(--muted)'}}>{m.email}</div>
               </div>
             </div>
@@ -81,9 +111,45 @@ export default function Members() {
               <span className={`badge ${m.role==='admin'?'badge-high':m.role==='manager'?'badge-medium':'badge-low'}`}>{m.role}</span>
               <span style={{fontSize:12,color:'var(--muted)'}}>Joined {new Date(m.created_at).toLocaleDateString()}</span>
             </div>
+            <div className="member-actions">
+              <button type="button" className="btn-secondary btn-sm" onClick={() => openCompose({ toIds: [m.id] })}>
+                Message
+              </button>
+              <button type="button" className="btn-maroon-icon" aria-label="Schedule meeting with member" title="Schedule meeting" onClick={() => openMeeting([m.id])}>
+                📅
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
+      <ComposeEmail
+        isOpen={composeOpen}
+        onClose={() => setComposeOpen(false)}
+        members={members}
+        initialToIds={composePrefill.toIds}
+        initialCcIds={composePrefill.ccIds}
+        initialSubject={composePrefill.subject}
+        initialBody={composePrefill.body}
+        initialAttachments={composePrefill.attachments}
+      />
+
+      <MeetingScheduler
+        isOpen={meetingOpen}
+        onClose={() => setMeetingOpen(false)}
+        members={members}
+        initialParticipantIds={meetSeedParticipants}
+        onComposeInvite={(p) => {
+          setComposePrefill({
+            toIds: p.toIds || [],
+            ccIds: p.ccIds || [],
+            subject: p.subject || '',
+            body: p.body || '',
+            attachments: p.attachments || [],
+          });
+          setComposeOpen(true);
+        }}
+      />
 
       {showAddModal && (
         <div className="modal-overlay" onClick={e => e.target===e.currentTarget && setShowAddModal(false)}>
@@ -136,9 +202,9 @@ export default function Members() {
                 </select>
               </div>
             </div>
-            <div className="modal-actions">
-              <button className="btn btn-ghost" onClick={() => { setShowAddModal(false); resetForm(); }} disabled={saving}>Cancel</button>
-              <button className="btn btn-blue" onClick={submitMember} disabled={saving}>
+            <div className="modal-actions modal-actions-split">
+              <button type="button" className="btn-secondary" onClick={() => { setShowAddModal(false); resetForm(); }} disabled={saving}>Cancel</button>
+              <button type="button" className="btn-primary" onClick={submitMember} disabled={saving}>
                 {saving ? 'Adding...' : 'Add Member'}
               </button>
             </div>

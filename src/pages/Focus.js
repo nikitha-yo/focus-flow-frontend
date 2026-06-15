@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import api from '../api';
 
 const MODES = [
-  { label:'Focus', mins:25, color:'var(--teal)' },
-  { label:'Short Break', mins:5, color:'var(--blue)' },
-  { label:'Long Break', mins:15, color:'var(--purple)' },
+  { label:'Focus', mins:25, color:'var(--color-maroon)' },
+  { label:'Short Break', mins:5, color:'var(--color-blue)' },
+  { label:'Long Break', mins:15, color:'var(--color-amber)' },
 ];
 
 export default function Focus() {
@@ -80,7 +80,7 @@ export default function Focus() {
         <div className="card" style={{textAlign:'center'}}>
           <div style={{display:'flex',gap:8,marginBottom:24,justifyContent:'center'}}>
             {MODES.map((m,i) => (
-              <button key={i} className={`btn btn-sm ${modeIdx===i?'btn-teal':'btn-ghost'}`} onClick={() => setModeIdx(i)}>{m.label}</button>
+              <button type="button" key={i} className={`btn btn-sm ${modeIdx===i?'btn-teal':'btn-ghost'}`} onClick={() => setModeIdx(i)}>{m.label}</button>
             ))}
           </div>
 
@@ -91,7 +91,7 @@ export default function Focus() {
 
           <div className="timer-circle" style={{margin:'0 auto 16px'}}>
             <svg width="220" height="220" viewBox="0 0 220 220">
-              <circle cx="110" cy="110" r={r} fill="none" stroke="var(--s3)" strokeWidth="10"/>
+              <circle cx="110" cy="110" r={r} fill="none" stroke="#f0f0f4" strokeWidth="10"/>
               <circle cx="110" cy="110" r={r} fill="none" stroke={mode.color} strokeWidth="10"
                 strokeDasharray={circ} strokeDashoffset={circ * (1 - progress)}
                 strokeLinecap="round" style={{transition:'stroke-dashoffset 0.5s',transform:'rotate(-90deg)',transformOrigin:'center'}}/>
@@ -103,10 +103,10 @@ export default function Focus() {
           </div>
 
           <div className="timer-controls">
-            {!running ? <button className="btn btn-teal" onClick={start}>▶ Start</button>
-              : <button className="btn btn-ghost" onClick={pause}>⏸ Pause</button>}
-            <button className="btn btn-ghost" onClick={reset}>↺ Reset</button>
-            {running && <button className="btn btn-ghost" onClick={() => setDistractions(d=>d+1)}>😵 +Distraction ({distractions})</button>}
+            {!running ? <button type="button" className="btn-primary" onClick={start}>▶ Start</button>
+              : <button type="button" className="btn-secondary" onClick={pause}>⏸ Pause</button>}
+            <button type="button" className="btn-secondary" onClick={reset}>↺ Reset</button>
+            {running && <button type="button" className="btn-secondary" onClick={() => setDistractions(d=>d+1)}>😵 +Distraction ({distractions})</button>}
           </div>
         </div>
 
@@ -119,13 +119,16 @@ export default function Focus() {
               <div style={{fontSize:13}}>Start your first focus session!</div>
             </div>
           ) : sessions.slice(0,10).map(s => (
-            <div key={s.id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
+            <div key={s.id} className="task-item" style={{ marginBottom: 8 }}>
               <span style={{fontSize:20}}>{s.completed ? '✅' : '⏸️'}</span>
               <div style={{flex:1}}>
                 <div style={{fontSize:14,fontWeight:500}}>{s.task_label || 'Focus Session'}</div>
                 <div style={{fontSize:12,color:'var(--muted)'}}>{s.duration_mins} min · {s.distractions} distractions</div>
               </div>
-              <span style={{fontSize:11,color:'var(--muted)'}}>{new Date(s.start_time).toLocaleDateString()}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                {s.completed && <span className="session-chip-done">Completed</span>}
+                <span style={{fontSize:11,color:'var(--muted)'}}>{new Date(s.start_time).toLocaleDateString()}</span>
+              </div>
             </div>
           ))}
         </div>
