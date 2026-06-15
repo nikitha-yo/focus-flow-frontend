@@ -112,6 +112,26 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <div className="card weekly-dashboard-card">
+        <div>
+          <div className="chart-title" style={{marginBottom: 5}}>Weekly Task Progress</div>
+          <div className="page-subtitle" style={{marginTop: 0}}>Recurring task completion for the current week</div>
+        </div>
+        <div className="weekly-dashboard-progress">
+          <div className="weekly-dashboard-rate">{Math.round(stats.weekly_task_progress?.completion_rate || 0)}%</div>
+          <div className="progress-track">
+            <div className="progress-fill green" style={{width: `${stats.weekly_task_progress?.completion_rate || 0}%`}} />
+          </div>
+        </div>
+        <div className="weekly-dashboard-streak">
+          <Flame size={19} />
+          <div>
+            <strong>{stats.weekly_task_progress?.current_streak || 0} days</strong>
+            <span>Current completion streak</span>
+          </div>
+        </div>
+      </div>
+
       <div className="card-grid card-grid-2">
         <div className="chart-wrapper chart-bare">
           <div className="chart-title">Activity Overview</div>
