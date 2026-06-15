@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { File, FileSpreadsheet, FileText, FolderOpen } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 
 const MOCK_DRIVE_NAMES = ['Q4 OKRs.docx', 'Team Budget FY26.xlsx', 'Product roadmap.pdf', 'All-hands recap.docx'];
 
 function iconFor(ft) {
-  if (ft === 'pdf') return { emoji: '📄', bg: '#fee2e2', color: '#b91c1c' };
-  if (ft === 'docx') return { emoji: '📝', bg: '#dbeafe', color: '#1d4ed8' };
-  return { emoji: '📊', bg: '#dcfce7', color: '#15803d' };
+  if (ft === 'pdf') return { Icon: File, bg: '#fee2e2', color: '#b91c1c' };
+  if (ft === 'docx') return { Icon: FileText, bg: '#dbeafe', color: '#1d4ed8' };
+  return { Icon: FileSpreadsheet, bg: '#dcfce7', color: '#15803d' };
 }
 
 export default function DocumentHub() {
@@ -111,7 +112,7 @@ export default function DocumentHub() {
     <div>
       <div className="page-header">
         <div>
-          <div className="page-title">📁 Document Hub</div>
+          <div className="page-title">Document Hub</div>
           <div className="page-subtitle">Upload, search, and share org documents</div>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -159,7 +160,7 @@ export default function DocumentHub() {
         <div className="spinner" style={{ marginTop: 40 }} />
       ) : filtered.length === 0 ? (
         <div className="empty-state card" style={{ background: 'var(--s1)' }}>
-          <div className="empty-icon">📂</div>
+          <div className="empty-icon"><FolderOpen size={28} /></div>
           <div className="empty-title">No matches</div>
           <div>Upload a PDF, DOCX, or XLSX file to get started.</div>
         </div>
@@ -167,6 +168,7 @@ export default function DocumentHub() {
         <div className="card-grid card-grid-3">
           {filtered.map((d) => {
             const sty = iconFor(d.file_type);
+            const FileIcon = sty.Icon;
             const iso = d.uploaded_at ? new Date(d.uploaded_at).toLocaleString() : '—';
             return (
               <div key={d.id || d.mockKey} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -185,7 +187,7 @@ export default function DocumentHub() {
                       flexShrink: 0,
                     }}
                   >
-                    {sty.emoji}
+                    <FileIcon size={23} />
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <div title={d.title} style={{ fontWeight: 700, fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

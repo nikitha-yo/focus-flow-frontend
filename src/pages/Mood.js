@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Lightbulb, Smile } from 'lucide-react';
 import api from '../api';
-
-const MOODS = [
-  { key:'energized', emoji:'⚡', label:'Energized' },
-  { key:'focused', emoji:'🎯', label:'Focused' },
-  { key:'happy', emoji:'😊', label:'Happy' },
-  { key:'tired', emoji:'😴', label:'Tired' },
-  { key:'stressed', emoji:'😰', label:'Stressed' },
-];
+import { getMoodMeta, MOODS } from '../ui/moods';
 
 export default function Mood() {
   const [logs, setLogs] = useState([]);
@@ -45,7 +39,9 @@ export default function Mood() {
           <div className="mood-grid" style={{marginBottom:24}}>
             {MOODS.map(m => (
               <button key={m.key} className={`mood-btn ${selected===m.key?'active':''}`} onClick={() => setSelected(m.key)}>
-                <div className="mood-emoji">{m.emoji}</div>
+                <div className="mood-icon" style={{color:m.color,background:m.softColor}}>
+                  <m.Icon size={22} />
+                </div>
                 <div className="mood-name">{m.label}</div>
               </button>
             ))}
@@ -68,7 +64,7 @@ export default function Mood() {
 
           {rec && (
             <div className="mood-rec-box">
-              <div style={{fontWeight:600,marginBottom:6,color:'var(--color-maroon)'}}>💡 Recommendation</div>
+              <div className="icon-heading" style={{fontWeight:600,marginBottom:6,color:'var(--color-maroon)'}}><Lightbulb size={17} /> Recommendation</div>
               <div style={{fontSize:14}}>{rec}</div>
             </div>
           )}
@@ -78,15 +74,15 @@ export default function Mood() {
           <div className="chart-title">Mood History</div>
           {logs.length === 0 ? (
             <div className="empty-state" style={{padding:24}}>
-              <div className="empty-icon">😊</div>
+              <div className="empty-icon"><Smile size={28} /></div>
               <div className="empty-title">No mood logs yet</div>
             </div>
           ) : logs.slice(0,12).map(l => {
-            const m = MOODS.find(x=>x.key===l.mood) || {emoji:'😐'};
+            const m = getMoodMeta(l.mood);
             const chip = l.energy_level >= 4 ? 'green' : l.energy_level >= 3 ? 'amber' : 'red';
             return (
               <div key={l.id} className="mood-log-row">
-                <span style={{fontSize:24}}>{m.emoji}</span>
+                <span className="mood-indicator" style={{color:m.color,background:m.softColor}}><m.Icon size={19} /></span>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14,fontWeight:500,textTransform:'capitalize'}}>{l.mood}</div>
                   <div style={{fontSize:12,color:'var(--muted)'}}>{l.recommendation?.slice(0,60)}...</div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Building2, CalendarDays, Users } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 import MeetingScheduler from '../components/MeetingScheduler';
@@ -57,12 +58,12 @@ export default function Members() {
     <div>
       <div className="page-header">
         <div>
-          <div className="page-title">👥 Team Members</div>
+          <div className="page-title">Team Members</div>
           <div className="page-subtitle">{user?.org?.name} · {members.length} members</div>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'flex-end' }}>
           <button type="button" className="btn-secondary btn-sm" onClick={() => openMeeting([])}>
-            📅 Schedule Meeting
+            <CalendarDays size={16} /> Schedule Meeting
           </button>
           {canAddMembers && (
             <button type="button" className="btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
@@ -74,12 +75,12 @@ export default function Members() {
 
       <div className="org-banner">
         <div>
-          <div className="org-badge">🏢 {user?.org?.name}</div>
+          <div className="org-badge"><Building2 size={14} /> {user?.org?.name}</div>
           <div style={{fontSize:20,fontWeight:700,color:'#fff'}}>{members.length} Team Members</div>
           <div className="org-banner-label" style={{color:'rgba(255,255,255,0.65)', marginTop:4}}>{user?.org?.type} organisation</div>
         </div>
-        <div style={{ alignSelf: 'center', fontSize: 42, opacity: 0.85 }} aria-hidden="true">
-          👥
+        <div style={{ alignSelf: 'center', opacity: 0.85 }} aria-hidden="true">
+          <Users size={42} />
         </div>
       </div>
 
@@ -102,7 +103,7 @@ export default function Members() {
             </div>
             <div className="member-actions">
               <button type="button" className="btn-maroon-icon" aria-label="Schedule meeting with member" title="Schedule meeting" onClick={() => openMeeting([m.id])}>
-                📅
+                <CalendarDays size={17} />
               </button>
             </div>
           </div>

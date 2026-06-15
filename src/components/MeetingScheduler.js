@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Check, X } from 'lucide-react';
 import api from '../api';
 import MemberSelect from './MemberSelect';
 
@@ -121,7 +122,7 @@ export default function MeetingScheduler({ isOpen, onClose, members, initialPart
               Schedule a Meeting
             </div>
             <button type="button" className="logout-btn" onClick={onClose} aria-label="Close" style={{ color: 'var(--muted)', fontSize: 24 }}>
-              ×
+              <X size={20} />
             </button>
           </div>
 
@@ -141,7 +142,7 @@ export default function MeetingScheduler({ isOpen, onClose, members, initialPart
                 <div style={{ fontSize: 11, color: 'var(--muted)' }}>{p.id === 'meet' ? 'Video' : p.id === 'zoom' ? 'Video' : 'Video'}</div>
                 {platform === p.id && (
                   <span style={{ position: 'absolute', top: 8, right: 8, color: p.color, fontWeight: 800 }} title="Selected">
-                    ✓
+                    <Check size={15} strokeWidth={3} />
                   </span>
                 )}
               </button>

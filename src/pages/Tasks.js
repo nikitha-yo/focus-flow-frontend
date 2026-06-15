@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Check, ClipboardList, Pencil, Trash2 } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 
@@ -78,14 +79,14 @@ export default function Tasks() {
 
       {loading ? <div className="spinner" style={{marginTop:40}}/> : filtered.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">📋</div>
+          <div className="empty-icon"><ClipboardList size={28} /></div>
           <div className="empty-title">No tasks found</div>
           <div>Add your first task to get started!</div>
         </div>
       ) : filtered.map(t => (
         <div key={t.id} className={`task-item ${t.status==='completed'?'task-done':''}`}>
           <div className={`task-check ${t.status==='completed'?'done':''}`} onClick={() => toggle(t)}>
-            {t.status==='completed' && '✓'}
+            {t.status==='completed' && <Check size={14} strokeWidth={3} />}
           </div>
           <div style={{flex:1,minWidth:0}}>
             <div className={`task-title ${t.status==='completed'?'done':''}`}>{t.title}</div>
@@ -96,8 +97,8 @@ export default function Tasks() {
           </div>
           <span className={`badge badge-${t.priority}`}>{t.priority}</span>
           <span className={`badge badge-${t.status}`} style={{marginLeft:6}}>{t.status.replace('_',' ')}</span>
-          <button className="btn btn-sm btn-ghost" style={{marginLeft:8}} onClick={() => openEdit(t)}>✏️</button>
-          <button className="btn btn-sm btn-danger" style={{marginLeft:4}} onClick={() => del(t.id)}>🗑️</button>
+          <button className="btn btn-sm btn-ghost icon-button" style={{marginLeft:8}} onClick={() => openEdit(t)} aria-label={`Edit ${t.title}`} title="Edit task"><Pencil size={15} /></button>
+          <button className="btn btn-sm btn-danger icon-button" style={{marginLeft:4}} onClick={() => del(t.id)} aria-label={`Delete ${t.title}`} title="Delete task"><Trash2 size={15} /></button>
         </div>
       ))}
 

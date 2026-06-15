@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Inbox, X } from 'lucide-react';
 import api from '../api';
 
 export default function DocumentPickerModal({ isOpen, onClose, onConfirm, initialSelection = [], title = 'Choose documents' }) {
@@ -43,14 +44,14 @@ export default function DocumentPickerModal({ isOpen, onClose, onConfirm, initia
             {title}
           </div>
           <button type="button" className="logout-btn" onClick={onClose} aria-label="Close" style={{ color: 'var(--muted)', fontSize: 22 }}>
-            ×
+            <X size={20} />
           </button>
         </div>
         {loading ? (
           <div className="spinner" style={{ margin: '24px auto' }} />
         ) : docs.length === 0 ? (
           <div className="empty-state" style={{ padding: 24 }}>
-            <div className="empty-icon">📭</div>
+            <div className="empty-icon"><Inbox size={28} /></div>
             <div className="empty-title">No documents yet</div>
             <div>Upload files from Document Hub first.</div>
           </div>

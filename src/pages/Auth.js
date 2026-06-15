@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Building2, Flame, UserRound } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 
@@ -57,7 +58,7 @@ export default function Auth() {
       <aside className="auth-brand-panel">
         <div className="auth-brand-inner">
           <div className="auth-brand-logo-row">
-            <div className="auth-brand-logo-mark">🔥</div>
+            <div className="auth-brand-logo-mark"><Flame size={28} /></div>
             <div className="auth-brand-title">FocusFlow</div>
           </div>
           <p className="auth-brand-tagline">Stay focused. Stay balanced.</p>
@@ -102,10 +103,10 @@ export default function Auth() {
               <p className="auth-card-sub">Start your productivity journey</p>
               <div className="auth-type-select">
                 <button type="button" className={`type-btn ${!isOrg?'active':''}`} onClick={() => handleTypeChange('individual')}>
-                  <div className="icon">👤</div><div className="label">Individual</div><div className="desc">Personal productivity</div>
+                  <div className="icon"><UserRound size={25} /></div><div className="label">Individual</div><div className="desc">Personal productivity</div>
                 </button>
                 <button type="button" className={`type-btn org-btn ${isOrg?'active':''}`} onClick={() => handleTypeChange('org')}>
-                  <div className="icon">🏢</div><div className="label">Organisation</div><div className="desc">Team workspace</div>
+                  <div className="icon"><Building2 size={25} /></div><div className="label">Organisation</div><div className="desc">Team workspace</div>
                 </button>
               </div>
               <div className="form-row">

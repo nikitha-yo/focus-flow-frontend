@@ -83,6 +83,8 @@ body {
 
 .icon-pill {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -295,7 +297,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  color: #fff;
   flex-shrink: 0;
 }
 
@@ -363,9 +365,11 @@ input:focus, textarea:focus, select:focus {
 }
 
 .nav-icon {
-  font-size: 16px;
   width: 22px;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .nav-divider {
@@ -455,6 +459,19 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 8px;
 }
 
+.org-badge,
+.btn-primary,
+.btn-secondary,
+.btn-maroon-icon {
+  align-items: center;
+}
+
+.org-badge,
+.btn-primary,
+.btn-secondary {
+  gap: 7px;
+}
+
 .org-banner-stat {
   font-size: 36px;
   font-weight: 700;
@@ -486,6 +503,19 @@ input:focus, textarea:focus, select:focus {
   font-weight: 600;
   margin-bottom: 16px;
   color: var(--color-text-primary);
+}
+
+.icon-heading,
+.inline-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .chart-wrapper.chart-bare {
@@ -685,7 +715,15 @@ button.btn-secondary.btn-sm {
   box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.15);
 }
 
-.mood-emoji { font-size: 28px; margin-bottom: 6px; }
+.mood-icon {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
 .mood-name { font-size: 12px; font-weight: 600; color: var(--color-text-primary); }
 
 .mood-log-row {
@@ -697,6 +735,16 @@ button.btn-secondary.btn-sm {
   background: var(--color-bg-card);
   border: 0.5px solid var(--color-border);
   border-radius: 12px;
+}
+
+.mood-indicator {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .mood-rec-box {
@@ -714,6 +762,49 @@ button.btn-secondary.btn-sm {
   align-items: center;
   padding: 32px;
 }
+
+.mood-choice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.mood-choice-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.timer-mood {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--s2);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.session-status-icon,
+.insight-icon,
+.achievement-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: var(--color-maroon);
+  background: var(--color-maroon-pale);
+  flex-shrink: 0;
+}
+
+.session-status-icon.complete { color: var(--color-green); background: var(--color-green-bg); }
+.session-status-icon.paused { color: var(--color-amber); background: var(--color-amber-bg); }
+.insight-icon { margin-bottom: 9px; }
+.achievement-icon { margin: 0 auto 9px; }
 
 .timer-circle {
   width: 220px;
@@ -1082,8 +1173,14 @@ button.btn-secondary.btn-sm {
 }
 
 .auth-signin-card .type-btn .icon {
-  font-size: 32px;
-  line-height: 1;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-maroon);
+  background: var(--color-maroon-pale);
 }
 
 .auth-signin-card .type-btn .label {
@@ -1224,7 +1321,6 @@ button.btn-secondary.btn-sm {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
   box-shadow: 0 8px 24px rgba(192, 57, 43, 0.35);
   cursor: default;
 }
@@ -1243,7 +1339,17 @@ button.btn-secondary.btn-sm {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .empty-state { text-align: center; padding: 48px 24px; color: var(--color-text-muted); }
-.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-icon {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  color: var(--color-maroon);
+  background: var(--color-maroon-pale);
+}
 .empty-title { font-size: 16px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 8px; }
 
 .form-input { font-family: "DM Sans", sans-serif; }

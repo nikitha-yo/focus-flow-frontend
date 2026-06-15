@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 const inputMix = {
   background: 'var(--s2)',
@@ -104,7 +105,7 @@ export default function MemberSelect({ label, members, value = [], onChange, pla
                 padding: 0,
               }}
             >
-              ×
+              <X size={13} />
             </button>
           </span>
         ))}

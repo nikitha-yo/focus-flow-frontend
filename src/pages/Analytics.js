@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { BarChart3, Brain, Flame, Timer } from 'lucide-react';
 import api from '../api';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line, CartesianGrid } from 'recharts';
 
@@ -35,16 +36,16 @@ export default function Analytics() {
     <div>
       <div className="page-header">
         <div>
-          <div className="page-title">📈 Analytics Dashboard</div>
+          <div className="page-title">Analytics Dashboard</div>
           <div className="page-subtitle">Your productivity insights and performance trends</div>
         </div>
       </div>
 
       <div className="card-grid card-grid-4" style={{marginBottom:24}}>
-        <div className="stat-card"><div className="stat-icon">📊</div><div className="stat-value">{stats.tasks.completion_rate}%</div><div className="stat-label">Completion Rate</div></div>
-        <div className="stat-card"><div className="stat-icon">⏱️</div><div className="stat-value">{stats.focus.total_focus_mins}</div><div className="stat-label">Total Focus Mins</div></div>
-        <div className="stat-card"><div className="stat-icon">🔥</div><div className="stat-value">{stats.streak.longest_streak}</div><div className="stat-label">Best Streak</div></div>
-        <div className="stat-card"><div className="stat-icon">😊</div><div className="stat-value">{moods.length}</div><div className="stat-label">Mood Check-ins</div></div>
+        <div className="stat-card"><div className="icon-pill red"><BarChart3 size={21} /></div><div className="stat-value">{stats.tasks.completion_rate}%</div><div className="stat-label">Completion Rate</div></div>
+        <div className="stat-card"><div className="icon-pill green"><Timer size={21} /></div><div className="stat-value">{stats.focus.total_focus_mins}</div><div className="stat-label">Total Focus Mins</div></div>
+        <div className="stat-card"><div className="icon-pill amber"><Flame size={21} /></div><div className="stat-value">{stats.streak.longest_streak}</div><div className="stat-label">Best Streak</div></div>
+        <div className="stat-card"><div className="icon-pill blue"><Brain size={21} /></div><div className="stat-value">{moods.length}</div><div className="stat-label">Mood Check-ins</div></div>
       </div>
 
       <div className="card-grid card-grid-2" style={{marginBottom:16}}>

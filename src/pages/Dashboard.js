@@ -1,10 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  ClipboardList,
+  Flame,
+  Megaphone,
+  Pin,
+  Timer,
+} from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthContext';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, CartesianGrid } from 'recharts';
 import MeetingScheduler from '../components/MeetingScheduler';
 
 const BAR_COLORS = ['#c0392b', '#2563eb', '#16a34a', '#d97706'];
+const PRIORITY_COLORS = {
+  high: '#c0392b',
+  medium: '#d97706',
+  low: '#16a34a',
+};
 
 export default function Dashboard() {
   const { user, isOrg } = useAuth();
@@ -37,7 +52,7 @@ export default function Dashboard() {
     <div>
       <div className="page-header">
         <div>
-          <div className="page-title">Welcome back, {user?.username}! 👋</div>
+          <div className="page-title">Welcome back, {user?.username}</div>
           <div className="page-subtitle">{new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
         </div>
         {isOrg && (
@@ -50,7 +65,7 @@ export default function Dashboard() {
                 setMeetingOpen(true);
               }}
             >
-              📅 Schedule Meeting
+              <CalendarDays size={16} /> Schedule Meeting
             </button>
           </div>
         )}
@@ -59,7 +74,7 @@ export default function Dashboard() {
       {isOrg && stats.org && (
         <div className="org-banner">
           <div>
-            <div className="org-badge">🏢 {user?.org?.name}</div>
+            <div className="org-badge"><Building2 size={14} /> {user?.org?.name}</div>
             <div style={{fontSize:22,fontWeight:700,marginBottom:4,color:'#fff'}}>{stats.org.total_members} Team Members</div>
             <div className="org-banner-label" style={{color:'rgba(255,255,255,0.65)'}}>{stats.org.org_tasks_completed}/{stats.org.org_tasks_total} org tasks completed</div>
           </div>
@@ -72,25 +87,25 @@ export default function Dashboard() {
 
       <div className="card-grid card-grid-4" style={{marginBottom:24}}>
         <div className="stat-card red">
-          <div className="icon-pill red">✅</div>
+          <div className="icon-pill red"><CheckCircle2 size={21} /></div>
           <div className="stat-value">{stats.tasks.completed}</div>
           <div className="stat-label">Tasks Completed</div>
           <span className="chip red">All done</span>
         </div>
         <div className="stat-card blue">
-          <div className="icon-pill blue">📋</div>
+          <div className="icon-pill blue"><ClipboardList size={21} /></div>
           <div className="stat-value">{stats.tasks.pending}</div>
           <div className="stat-label">Tasks Pending</div>
           <span className="chip blue">Clear</span>
         </div>
         <div className="stat-card green">
-          <div className="icon-pill green">⏱️</div>
+          <div className="icon-pill green"><Timer size={21} /></div>
           <div className="stat-value">{stats.focus.total_focus_mins}</div>
           <div className="stat-label">Focus Minutes</div>
           <span className="chip green">Start session</span>
         </div>
         <div className="stat-card amber">
-          <div className="icon-pill amber">🔥</div>
+          <div className="icon-pill amber"><Flame size={21} /></div>
           <div className="stat-value">{stats.streak.current_streak}</div>
           <div className="stat-label">Day Streak</div>
           <span className="chip amber">Keep it up!</span>
@@ -121,15 +136,52 @@ export default function Dashboard() {
             <ProgressBar label="Focus Sessions" value={Math.min(stats.focus.total_sessions * 10, 100)} fillClass="blue" />
             <ProgressBar label="Streak Progress" value={Math.min(stats.streak.current_streak * 10, 100)} fillClass="amber" />
           </div>
-          {stats.last_mood && (
-            <div style={{marginTop:20,padding:'12px 16px',background:'var(--s2)',borderRadius:10,border:'1px solid var(--border)'}}>
-              <div style={{fontSize:12,color:'var(--muted)',marginBottom:4}}>Last Mood Check-in</div>
-              <div style={{fontWeight:600,textTransform:'capitalize'}}>{stats.last_mood.mood} · Energy {stats.last_mood.energy_level}/5</div>
-              <div style={{fontSize:12,color:'var(--muted)',marginTop:4}}>{stats.last_mood.recommendation}</div>
-            </div>
-          )}
         </div>
       </div>
+
+      {isOrg && stats.announcements && stats.announcements.length > 0 && (
+        <div style={{marginTop:24}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+            <div className="chart-title icon-heading"><Megaphone size={18} /> Latest Announcements</div>
+            <button type="button" className="btn-link" onClick={() => window.location.href = '/announcements'} style={{fontSize:13,color:'var(--color-maroon)',fontWeight:600,textDecoration:'none'}}>View All →</button>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))',gap:16}}>
+            {stats.announcements.map(announcement => (
+              <div
+                key={announcement.id}
+                className="card"
+                style={{
+                  borderLeft:`4px solid ${PRIORITY_COLORS[announcement.priority] || '#999'}`,
+                  padding:0,
+                  overflow:'hidden'
+                }}
+              >
+                <div style={{padding:16}}>
+                  <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:10}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <span className="inline-icon" style={{color:'var(--color-maroon)'}}>
+                        {announcement.announcement_type === 'meeting' ? <CalendarDays size={18} /> : <Pin size={18} />}
+                      </span>
+                      <div>
+                        <div style={{fontSize:14,fontWeight:700}}>{announcement.title}</div>
+                      </div>
+                    </div>
+                    <span style={{background:PRIORITY_COLORS[announcement.priority],color:'#fff',padding:'2px 8px',borderRadius:3,fontSize:11,fontWeight:600,whiteSpace:'nowrap'}}>
+                      {announcement.priority === 'high' ? 'High' : announcement.priority === 'medium' ? 'Medium' : 'Low'}
+                    </span>
+                  </div>
+                  <div style={{fontSize:13,color:'var(--text)',lineHeight:1.4,marginBottom:10,maxHeight:60,overflow:'hidden',textOverflow:'ellipsis',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>
+                    {announcement.message}
+                  </div>
+                  <div style={{fontSize:11,color:'var(--muted)'}}>
+                    {new Date(announcement.created_at).toLocaleDateString()} · By {announcement.created_by_name}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <MeetingScheduler
         isOpen={meetingOpen}
