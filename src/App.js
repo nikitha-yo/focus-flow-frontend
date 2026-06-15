@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
 import { AuthProvider, useAuth } from './AuthContext';
 import Sidebar from './components/Sidebar';
 import Auth from './pages/Auth';
@@ -19,20 +18,6 @@ function Layout({ children }) {
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">{children}</main>
-      <div className="ai-chat-widget" aria-hidden="true">
-        <div className="ai-chat-widget-inner">
-          <div className="ai-chat-panel">
-            <div className="ai-chat-header">FocusFlow Assistant</div>
-            <div className="ai-chat-body">
-              <div className="ai-bubble ai-bubble-ai">
-                Hi! I can summarize your streaks or suggest focus blocks whenever you&apos;re ready.
-              </div>
-              <div className="ai-bubble ai-bubble-user">Show me quick wins for today.</div>
-            </div>
-          </div>
-          <div className="ai-chat-fab"><MessageCircle size={22} strokeWidth={2} /></div>
-        </div>
-      </div>
     </div>
   );
 }
